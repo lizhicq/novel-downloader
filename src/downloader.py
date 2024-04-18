@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 from parser import * # type: ignore
 from multiprocessing import Pool, Manager
 
+
 def download_chapter(chapter):
     try:
         url = chapter['url']

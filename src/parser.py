@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
+import os
 
 
 def get_html_from_url(url):
@@ -14,7 +15,7 @@ def get_html_from_url(url):
 
     # Initialize a Chrome webdriver
     driver = webdriver.Chrome(
-        executable_path='~/Applications/Drivers/chromedriver', 
+        executable_path=os.getenv('CHROMEDRIVER_PATH'), 
         options=chrome_options
     )
     # Load the page

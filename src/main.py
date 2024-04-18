@@ -1,11 +1,18 @@
 from downloader import download_novel,save_chapters_to_text
 from parser import * # type: ignore
+import os
 
 def main():
-    url = "https://www.piaotia.com/html/14/14836/"
+    url = "https://www.piaotia.com/html/15/15296/"
     chapters = get_novel_chapters(url)
     chapters = download_novel(chapters)
-    save_chapters_to_text(chapters, '~/GitHub/novel-downloader/data/novels/灵境行者.txt')
+    chapters[:10]
+    save_chapters_to_text(
+        chapters,     
+        os.path.join(
+            os.getcwd(),
+            'data/novels/妖武乱世.txt'
+    ))
 
 if __name__ == "__main__":
     main()

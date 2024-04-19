@@ -18,7 +18,7 @@ def download_novel(chapters:list):
     # manager = Manager()
     # chapters = manager.list(chapters)
     unfinished_chaps = [chap for chap in chapters if chap['content'] == ""]  
-    while len(unfinished_chaps) > 1:
+    while len(unfinished_chaps) > 0:
         print('unfinished', len(unfinished_chaps), 'total', len(chapters))
         with Pool(processes=8) as pool:
             results = pool.map(download_chapter, unfinished_chaps)

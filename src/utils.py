@@ -1,5 +1,7 @@
 def replace_html_div(html_content):
-    return html_content.replace('    ', '  \n')
+    html_content = html_content.replace('    ', '  \n')
+    html_content = html_content.replace('必应~搜*\:择.日。网~,`全，网，最快。  ', '')
+    return html_content
 
 def replace_novel_div(filename):
     with open(filename, 'r', encoding='utf-8') as f:
@@ -10,5 +12,5 @@ def replace_novel_div(filename):
         
         
 if __name__ == '__main__':
-    replace_novel_div('data/novels/灵境行者.txt')
+    replace_novel_div('data/novels/妖武乱世.txt')
         

@@ -58,6 +58,6 @@ def create_epub(folder_path, output_file):
     print("EPUB文件已创建：{}".format(output_file))
 
 if __name__ == "__main__":
-    folder_path = "/Users/lizhicq/GitHub/novel-downloader/data/novels/test"
-    epub_path = "/Users/lizhicq/GitHub/novel-downloader/data/novels/文抄公-妖武乱世.epub"
+    folder_path = "./data/novels/test"
+    epub_path = "./data/novels/文抄公-妖武乱世.epub"
     create_epub(folder_path, epub_path) 

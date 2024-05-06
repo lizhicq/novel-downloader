@@ -9,7 +9,7 @@ def download_chapter(chapter):
         content = extract_novel_chapter(url)
         content = content.replace(title, '') # Clean addition title in content
         content = clean_novel_txt(content)
-        output_file = os.path.join("/Users/lizhicq/GitHub/novel-downloader/data/test/", f'{title}.txt')
+        output_file = os.path.join("./data/test/", f'{title}.txt')
         with open(output_file, 'w', encoding='utf-8') as f:
             f.write(f'{content}')
         return {'title': chapter['title'], 'url': url, 'content': content}

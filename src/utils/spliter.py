@@ -2,7 +2,7 @@ import os,re
 
 def split_novel(input_file):
     # 创建一个目录来存放拆分后的小文件
-    output_dir = '/Users/lizhicq/GitHub/novel-downloader/data/novels/test'
+    output_dir = './data/novels/test'
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
@@ -28,5 +28,5 @@ def split_novel(input_file):
     print("拆分完成！")
 
 # 调用函数来拆分小说
-novel_path = "/Users/lizhicq/GitHub/novel-downloader/data/novels/文抄公-妖武乱世.txt"
+novel_path = "./data/novels/文抄公-妖武乱世.txt"
 split_novel(novel_path)  # 替换'your_novel.txt'为你的大的txt文件路径

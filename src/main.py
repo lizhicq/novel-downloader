@@ -1,11 +1,14 @@
 from downloader import download_novel,save_chapters_to_text
+from epub_creator import create_novel_epub
 from parser import * # type: ignore
 from cleaner import *
 import os,time
 
 def main():
-    url = "https://www.piaotia.com/html/8/8791/"
-    novel = 'iCloud/Novel/文抄公-逍遥梦路.txt'
+    url = "https://www.piaotia.com/html/15/15296/"
+    save_path = 'GitHub/novel-downloader/data/novels/'
+    author = '文抄公'
+    book = '妖武乱世'
     
     max_retry = 5
     delay = 5
@@ -21,9 +24,12 @@ def main():
             else:
                 print("An unexpected error occurred:", e)
                 break  # Exit retry loop if a different error occurs
-    novel_path = os.path.join(os.getenv('HOME'), novel)
-    save_chapters_to_text(chapters,novel_path)
-    replace_novel_div(novel_path)
-
+    
+    save_path = os.path.join(os.getenv('HOME'), save_path, author + '-' + book)
+    
+    save_chapters_to_text(chapters,save_path)
+    # create_novel_epub(author, book, chapters, save_path)
+    
+    
 if __name__ == "__main__":
     main()

@@ -1,17 +1,20 @@
 from parser import * # type: ignore
 from process_tracker import print_progress_bar
 from multiprocessing import Pool, Manager
-
+from cleaner import clean_novel_txt
 
 def download_chapter(chapter):
     try:
-        url = chapter['url']
+        url, title = chapter['url'], chapter['title']
         content = extract_novel_chapter(url)
-        content = content.replace(chapter['title'], '') # Clean addition title in content
-        #print('successfully download',chapter['title'])
+        content = content.replace(title, '') # Clean addition title in content
+        content = clean_novel_txt(content)
+        output_file = os.path.join("/Users/lizhicq/GitHub/novel-downloader/data/test/", f'{title}.txt')
+        with open(output_file, 'w', encoding='utf-8') as f:
+            f.write(f'{content}')
         return {'title': chapter['title'], 'url': url, 'content': content}
     except Exception as e:
-        #print('error message', chapter['title'], e)
+        print('error message', chapter['title'], e)
         return {'title': chapter['title'], 'url': url, 'content': ""}
     
 
@@ -38,12 +41,14 @@ def task(chapter, progress_counter, lock, total_tasks):
     return chapter
     
 def main_process(chapters:list):
-    unfinished_chaps = [chap for chap in chapters if chap['content'] == ""]  
+    unfinished_chaps = [chap for chap in chapters if chap['content'] == ""]
+    counter = 0  
     while len(unfinished_chaps) > 0:
+        counter += 1
         manager = Manager()
         progress_counter = manager.Value('i', 0) # Shared integer
         lock = manager.Lock()
-        print('unfinished', len(unfinished_chaps), 'total', len(chapters))
+        print('\nunfinished', len(unfinished_chaps), 'total', len(chapters))
         tasks = [(chap, progress_counter, lock, len(unfinished_chaps)) 
                     for chap in unfinished_chaps]
         
@@ -57,4 +62,7 @@ def main_process(chapters:list):
                     chap['content'] = result['content']
         unfinished_chaps = [chap for chap in chapters if chap['content'] == ""]
         print_progress_bar(1 - len(unfinished_chaps) / len(chapters))
+        if counter > 10:
+            break
+        
     return list(chapters)

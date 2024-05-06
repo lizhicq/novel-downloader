@@ -2,7 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
 import os
-
+from src.cleaner import clean_novel_txt
 
 def get_html_from_url(url):
     # Set up Chrome options
@@ -58,13 +58,20 @@ def extract_novel_chapter(chapter_url):
     chapter_html = get_html_from_url(chapter_url)
     # 使用 BeautifulSoup 解析 HTML
     soup = BeautifulSoup(chapter_html, 'html.parser')
-    
-    # 寻找包含小说内容的标签
-    content_div = soup.find('div', id='content')
-    # 移除不需要的子元素，如链接等
-    for element in content_div.find_all(['a', 'script', 'table', 'div']):
-        element.decompose()
+    # 获取 id 为 'content' 的 div 标签的内容
+    content_div = soup.find('div', {'id': 'content'})
 
-    # 打印清理后的文本
-    clean_text = content_div.get_text()
-    return clean_text
+    # 获取 class 为 'contentadv' 的 div 标签内容
+    content_adv_div = soup.find('div', {'class': 'contentadv'})
+
+    full_text = ""
+    # 提取并合并两个部分的纯文本内容
+    if content_div:
+        content_text = content_div.get_text(separator="\n", strip=True)
+        full_text += content_text
+        
+    if content_adv_div:
+        content_adv_text = content_adv_div.get_text(separator="\n", strip=True)
+        full_text += content_adv_text
+    
+    return clean_novel_txt(full_text)

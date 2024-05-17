@@ -6,8 +6,8 @@ class TestCleaner(unittest.TestCase):
         with open('tests/data/Sample Chapter.html') as f:
             self.txt = f.read()
             
-    def test_clean_novel_txt(self):
-        result = src.cleaner.clean_novel_txt(self.txt)
+    def test_remove_ads_words(self):
+        result = src.cleaner.remove_ads_words(self.txt)
         unwanted_phrases = [
             r"\（快捷键\s*←\）", r"\（快捷键\s*→\）",
             r"上一章", r"下一章", r"返回目录", r"加入书签", r"推荐本书",

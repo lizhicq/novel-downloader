@@ -2,7 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
 import os
-from src.cleaner import clean_novel_txt
+from src.cleaner import remove_ads_words
 
 def get_html_from_url(url):
     # Set up Chrome options
@@ -74,4 +74,4 @@ def extract_novel_chapter(chapter_url):
         content_adv_text = content_adv_div.get_text(separator="\n", strip=True)
         full_text += content_adv_text
     
-    return clean_novel_txt(full_text)
+    return remove_ads_words(full_text)

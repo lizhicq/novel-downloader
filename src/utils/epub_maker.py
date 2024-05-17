@@ -1,63 +1,72 @@
-from ebooklib import epub
 import os,re
+from ebooklib import epub
+from src import cleaner
 
-def extract_number(filename):
-    # 使用正则表达式从文件名中提取章节数字
-    match = re.search(r'第(\d+)章', filename)
-    if match:
-        return int(match.group(1))
-    return 0
+def extract_chapter_number(filename):
+    match = re.search(r'第(\d+)', filename)
+    return int(match.group(1)) if match else float('inf')
 
-
-def create_epub(folder_path, output_file):
-    # 创建EPUB书籍对象
+def create_epub_from_multiple_txts(author, book_name, in_dir='./data/tmp', out_dir='./data/novels'):
     book = epub.EpubBook()
-
-    # 设置书籍的标识符、标题和语言
-    book.set_identifier('文抄公-妖武乱世')
-    book.set_title('妖武乱世')
-    book.set_language('zh')
-    book.add_author("文抄公")
-
-    # 添加封面
-    # book.set_cover("image.jpg", open("path_to_cover_image.jpg", "rb").read())
-
-    # 读取文件夹中的所有txt文件并添加为章节
+    # Set the title and author
+    book_id = author + '-' + book_name
+    book.set_identifier(book_id)
+    book.set_title(book_id)
+    book.set_language('ch')
+    book.add_author(author)
     
-    files = [f for f in os.listdir(folder_path) if f.endswith('.txt')]
-    files.sort(key=extract_number)  # 对文件名进行字母顺序排序
-    print(files)
-    
-    for file_name in files:
-        if file_name.endswith('.txt'):
-            file_path = os.path.join(folder_path, file_name)
-            chapter_title = os.path.splitext(file_name)[0]
+    if book_name not in in_dir:
+        in_dir = os.path.join(in_dir, book_name)
+    if not os.path.exists(in_dir):
+        os.makedirs(in_dir)
+    files = [f for f in os.listdir(in_dir) if f.endswith('.txt')]
+    files.sort(key=extract_chapter_number)
+    toc = []
+    spine = ['nav']
+    for i, file in enumerate(files):
+        file_path = os.path.join(in_dir, file)
+        title = file.replace('.txt', '')
+        chapter_file = f'{title}.xhtml'
+        chapter = epub.EpubHtml(
+            title=title, 
+            file_name=chapter_file, lang='ch')
+        
+        # Create Content with paragraphs
+        with open(file_path, 'r') as f:
+            content = f.read()
+            content = cleaner.remove_ads_words(content)
 
-            with open(file_path, 'r', encoding='utf-8') as f:
-                content = f.read()
-
-            # 创建章节
-            chapter = epub.EpubHtml(title=chapter_title, file_name=chapter_title + '.xhtml', lang='zh')
-            chapter.content = '<h1>{}</h1><p>{}</p>'.format(chapter_title, content)
-            book.add_item(chapter)
-
-            # 添加章节到目录
-            book.toc = (
-                epub.Link(chapter_title + '.xhtml', chapter_title, chapter_title),
-                (epub.Section("Simple book"), (chapter,)),
-            )
-            break
-
-    # 添加标准导航文件和NCX文件
+            paragraphs = content.split('\n')
+            content = ''.join(f'<p>{p}</p>' for p in paragraphs)
+            chapter.content = f'<h1>{title}</h1><p>{content}</p>'
+        
+        book.add_item(chapter)
+        toc.append(epub.Link(chapter_file, title, f'chap{i}'))
+        spine.append(chapter)
+    # Create a table of contents
+    book.toc = tuple(toc)
+    # Add navigation files
     book.add_item(epub.EpubNcx())
     book.add_item(epub.EpubNav())
 
-    # 写入EPUB文件
-    epub.write_epub(output_file, book, {})
+    # Define CSS style
+    style = 'BODY {color: white;}'
+    nav_css = epub.EpubItem(uid="style_nav", file_name="style/nav.css", media_type="text/css", content=style)
 
-    print("EPUB文件已创建：{}".format(output_file))
+    # Add CSS file
+    book.add_item(nav_css)
 
-if __name__ == "__main__":
-    folder_path = "./data/novels/test"
-    epub_path = "./data/novels/文抄公-妖武乱世.epub"
-    create_epub(folder_path, epub_path) 
+    # Create book spine
+    book.spine = spine
+
+    # Create EPUB file
+    output_file_path = os.path.join(out_dir, book_id)
+    epub.write_epub(f'{output_file_path}.epub', book, {})
+    print('Epub file is successfully created')
+    
+    
+if __name__ == '__main__':
+    create_epub_from_multiple_txts(
+        author='文抄公',
+        book_name='妖武乱世',
+    )

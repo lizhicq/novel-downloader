@@ -1,21 +1,20 @@
-from downloader import download_novel,save_chapters_to_text
-from epub_creator import create_novel_epub
+from downloader import download_novel
 from parser import * # type: ignore
 from cleaner import *
-import os,time
+from utils.epub_maker import create_epub_from_multiple_txts
+import time
 
 def main():
-    url = "https://www.piaotia.com/html/15/15296/"
-    save_path = 'GitHub/novel-downloader/data/novels/'
+    url = "https://www.piaotia.com/html/10/10141/"
     author = '文抄公'
-    book = '妖武乱世'
+    book = '超凡黎明'
     
     max_retry = 5
     delay = 5
     for attempt in range(max_retry):
         try:
             chapters = get_novel_chapters(url)
-            chapters = download_novel(chapters)
+            chapters = download_novel(chapters, book)
             break
         except Exception as e:
             if "ERR_CONNECTION_CLOSED" in str(e):
@@ -25,10 +24,8 @@ def main():
                 print("An unexpected error occurred:", e)
                 break  # Exit retry loop if a different error occurs
     
-    save_path = os.path.join(os.getenv('HOME'), save_path, author + '-' + book)
-    
-    save_chapters_to_text(chapters,save_path)
-    # create_novel_epub(author, book, chapters, save_path)
+    # save_chapters_to_text(chapters,save_path)
+    create_epub_from_multiple_txts(author,book)
     
     
 if __name__ == "__main__":

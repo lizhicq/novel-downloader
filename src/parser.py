@@ -41,12 +41,12 @@ def get_novel_chapters(content_url:str):
 
     # Extracting chapter names and URLs
     chapters = []
-    for chapter in chapter_list:
+    for index, chapter in enumerate(chapter_list):
         link = chapter.find('a')
         if link and 'href' in link.attrs:
             chapter_url = content_url + "/" + link['href'].strip()
             chapter_info = {
-                'title': link.text.strip() or "bad chapter", 
+                'title': str(index) + '-' + (link.text.strip() or "bad chapter"), 
                 'url': chapter_url,
                 'content':""
             }

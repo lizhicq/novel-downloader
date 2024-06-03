@@ -1,10 +1,12 @@
-import os,re
+import os
 from ebooklib import epub
 from src import cleaner
 
-def extract_chapter_number(filename):
-    match = re.search(r'第(\d+)', filename)
-    return int(match.group(1)) if match else float('inf')
+def extract_chapter_number(filename:str):
+    # match = re.search(r'第(\d+)', filename)
+    # return int(match.group(1)) if match else float('inf')
+    index = filename.split('-')[0]
+    return int(index)
 
 def create_epub_from_multiple_txts(author, book_name, in_dir='./data/tmp', out_dir='./data/novels'):
     book = epub.EpubBook()

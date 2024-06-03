@@ -5,9 +5,9 @@ from utils.epub_maker import create_epub_from_multiple_txts
 import time
 
 def main():
-    url = "https://www.piaotia.com/html/10/10141/"
+    url = "https://www.piaotia.com/html/8/8791/"
     author = '文抄公'
-    book = '超凡黎明'
+    book = '逍遥梦路'
     
     max_retry = 5
     delay = 5
@@ -20,8 +20,12 @@ def main():
             if "ERR_CONNECTION_CLOSED" in str(e):
                 print(f"Attempt {attempt + 1} failed with connection closed error. Retrying in {delay} seconds...")
                 time.sleep(delay)  # Wait before retrying
+            elif "No such file or director" in str(e):
+                print(f"Attempt {attempt + 1} failed with dir creation error. Retrying in {delay} seconds...")
+                print(str(e))
+                time.sleep(delay)  # Wait before retrying
             else:
-                print("An unexpected error occurred:", e)
+                print("Main process An unexpected error occurred:", e)
                 break  # Exit retry loop if a different error occurs
     
     # save_chapters_to_text(chapters,save_path)

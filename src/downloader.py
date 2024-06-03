@@ -46,6 +46,8 @@ def task(chapter, progress_counter, lock, total_tasks, novel_tmp_path):
     
 def main_process(chapters:list, book, tmp_dir='./data/tmp'):
     novel_tmp_path = os.path.join(tmp_dir, book)
+    if not os.path.exists(novel_tmp_path):
+        os.mkdir(novel_tmp_path)
     unfinished_chaps = [chap for chap in chapters if chap['content'] == "" 
         and f"{chap['title']}.txt" not in os.listdir(novel_tmp_path)]
     counter = 0

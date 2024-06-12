@@ -8,7 +8,7 @@ def replace_novel_div(filename):
     modified_content = remove_ads_words(content)
     modified_content = remove_duplicates(modified_content)
     modified_content = modified_content.replace(title, '')
-    modified_content = modified_content.replace('逍遥梦路','')
+    modified_content = modified_content.replace('苟在妖武乱世修仙','')
     
     with open(filename, 'w', encoding='utf-8') as f:
         f.write(modified_content)
@@ -49,7 +49,7 @@ def remove_ads_words(original_content: str) -> str:
 
     
 if __name__ == '__main__':
-    clean_dir = './data/tmp/逍遥梦路'
+    clean_dir = './data/tmp/妖武乱世'
     for file in os.listdir(clean_dir):
         file_path = os.path.join(clean_dir, file)
         replace_novel_div(file_path)

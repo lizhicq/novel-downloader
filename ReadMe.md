@@ -14,7 +14,7 @@ Novel Downloader is a Python tool designed to automatically download chapters fr
 Before you begin, ensure you have met the following requirements:
 - Python 3.8+
 - Selenium
-- ChromeDriver compatible with your Chrome browser version
+- ChromeDriver compatible with your Chrome browser version https://getwebdriver.com/chromedriver
 - (Optional) Virtual environment
 
 ## Installation

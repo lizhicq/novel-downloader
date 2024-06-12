@@ -31,8 +31,12 @@ def get_html_from_url(url):
 
 def get_novel_chapters(content_url:str):
     # Replace 'html_content' with your actual HTML content string
-    html_content = get_html_from_url(content_url)
-
+    max_retry = 10
+    retry = 0
+    html_content = ''
+    while len(html_content) < 10 and retry < max_retry:
+        html_content = get_html_from_url(content_url)
+    
     # Using BeautifulSoup to parse the HTML content
     soup = BeautifulSoup(html_content, 'html.parser')
 

@@ -3,8 +3,13 @@ import re,os
 def replace_novel_div(filename):
     with open(filename, 'r', encoding='utf-8') as f:
         content = f.read()
+    title = file_path.split('-')[-1].strip().replace('.txt','')
+    
     modified_content = remove_ads_words(content)
-    modified_content = remove_duplicates(content)
+    modified_content = remove_duplicates(modified_content)
+    modified_content = modified_content.replace(title, '')
+    modified_content = modified_content.replace('逍遥梦路','')
+    
     with open(filename, 'w', encoding='utf-8') as f:
         f.write(modified_content)
 
@@ -29,7 +34,8 @@ def remove_ads_words(original_content: str) -> str:
         r"章节错误.*?举报", r"\|\s*", r"重要声明.*?小说.*?版权所有",
         r"飘天文学.*?小说阅读网", r"www\.piaotia\.com", r"Copyright.*",
         r"必应 搜^:*\择^日 网全网^最，快。",
-        r"重要声明.*All rights reserved."
+        r"重要声明.*All rights reserved.",
+        r"分享到\w+."
     ]
 
     # 移除不需要的词句
@@ -43,7 +49,7 @@ def remove_ads_words(original_content: str) -> str:
 
     
 if __name__ == '__main__':
-    clean_dir = './data/tmp'
+    clean_dir = './data/tmp/逍遥梦路'
     for file in os.listdir(clean_dir):
         file_path = os.path.join(clean_dir, file)
         replace_novel_div(file_path)

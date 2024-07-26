@@ -5,9 +5,9 @@ from utils.epub_maker import create_epub_from_multiple_txts
 import time
 
 def main():
-    url = "https://www.piaotia.com/html/15/15296/"
-    author = '文抄公'
-    book = '妖武乱世'
+    url = "https://www.piaotia.com/html/15/15582/"
+    author = '三五玄七'
+    book = '苟到大乘'
     
     max_retry = 5
     delay = 5

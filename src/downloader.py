@@ -1,16 +1,21 @@
 from parser import * # type: ignore
 from process_tracker import print_progress_bar
 from multiprocessing import Pool, Manager
-from cleaner import remove_ads_words
+from cleaner import remove_ads_words, remove_duplicates
 import os
 
 
 def download_chapter(chapter, novel_tmp_path='./data/tmp'):
     try:
         url, title = chapter['url'], chapter['title']
+        
+        original_title = title.split('-')[-1] # new title example: 122-第122章 救援（为白银贺！）.txt
+        
         content = extract_novel_chapter(url)
-        content = content.replace(title, '') # Clean addition title in content
+        content = content.replace(original_title, '') # Clean addition title in content
         content = remove_ads_words(content)
+        content = remove_duplicates(content)
+        
         output_file = os.path.join(novel_tmp_path, f'{title}.txt')
         os.makedirs(os.path.dirname(output_file), exist_ok=True)
         

@@ -14,6 +14,7 @@ def get_html_from_url(url):
     )
 
     # Initialize a Chrome webdriver
+    # $xattr -d com.apple.quarantine chromedriver 
     driver = webdriver.Chrome(
         executable_path=os.getenv('CHROMEDRIVER_PATH'), 
         options=chrome_options
